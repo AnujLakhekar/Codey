@@ -6,12 +6,12 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, deleteUser } from "fireba
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyC2NeU15ttws_kn9EMODul9B_sqtW-CHZg",
-  authDomain: "codey-5254c.firebaseapp.com",
-  projectId: "codey-5254c",
-  storageBucket: "codey-5254c.firebasestorage.app",
-  messagingSenderId: "646123572023",
-  appId: "1:646123572023:web:ddd2ffcbfdef8ac60d28b2"
+  apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTHDOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGEID,
+  appId: import.meta.env.VITE_FIREBASE_APPID
 };
 
 // Initialize Firebase
