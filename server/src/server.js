@@ -24,7 +24,7 @@ const PORT = 4000;
 
 // apo uses
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://codey-delta.vercel.app/signin",
   credentials: true,
 }))
 
