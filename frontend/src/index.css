@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Gelasio&family=Inter:wght@400;500&display=swap');
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body{
+  user-select: none;
+}
+
+.ce-block__content, .ce-toolbar__content{
+    max-width: 900px;
+}
+
+.cdx-settings-button[data-tune='withBorder'],
+.cdx-settings-button[data-tune='withBackground'],
+.cdx-settings-button[data-tune='stretched'] {
+  display: none;
+}
+
+.btn-light {
+  background: #f3f4f6
+;
+  border-radius: 40px;
+  border: 1px solid lightgray;
+  padding: 6px;
+  color: #444;
+  padding: 5px;
+}
+
+.btn-dark:hover {
+  transition: .5s ease;
+  border: 1px solid gray;
+}
+
+.btn-dark {
+  background: black;
+  border-radius: 40px;
+  outline: none;
+  width: auto;
+  font-size: bold;
+  padding: 6px;
+  border: 1px solid dark blue;
+  color: white;
+}
