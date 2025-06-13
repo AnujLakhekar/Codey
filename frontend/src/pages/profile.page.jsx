@@ -96,7 +96,7 @@ export default function ProfilePage() {
       </div>
       
         <div className="flex gap-2.5  p-2 rounded text-blue-400 ">
-          <span className="flex gap-2.5 bg-gray border  p-2 rounded text-gray-800 ">Like {user?.account_info.total_posts}</span>
+          <span className="flex gap-2.5 bg-gray border  p-2 rounded text-gray-800 ">Like {user?.account_info.total_likes}</span>
           <span className="flex gap-2.5 bg-black p-2 rounded text-white ">reads {user?.account_info.total_reads}</span>
           
           {isOwner ? (<span className="flex gap-2.5 bg-black p-2 rounded text-white ">Edit</span>) : ""}

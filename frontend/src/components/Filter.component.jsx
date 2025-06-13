@@ -5,7 +5,7 @@ import {AnimationWraper} from "../common/page-animation.jsx"
 export default function FillterBlogs({ blogs }) {
   const [pageState, setPageState] = useState("Home");
   const [blogsFound, setBlogsFound] = useState(blogs);
-  const cata = ["All","Tech", "Games", "Programing", "News"];
+  const cata = ["all","tech", "games", "programing", "news"];
 
   useEffect(() => {
     // Optional effect if you want to reset blogs on page change
@@ -16,7 +16,7 @@ export default function FillterBlogs({ blogs }) {
     if (category == "All") {
     setBlogsFound(blogs);
     } else {
-    const filteredBlogs = blogs.filter((f) => f.tags.includes(category));
+    const filteredBlogs = blogs.filter((f) => f.tags.includes(category.toLowerCase()));
     setBlogsFound(filteredBlogs);
     }
   }
@@ -27,7 +27,7 @@ export default function FillterBlogs({ blogs }) {
         {cata.map((c, i) => (
           <button
             key={i}
-            onClick={(e) => handleFillterFunction(e, i, c)}
+            onClick={(e) => handleFillterFunction(e, i, c.toLowerCase())}
             className="bg-gray-100 border p-2 text-gray-500 rounded-lg hover:bg-gray-200"
           >
             {c}

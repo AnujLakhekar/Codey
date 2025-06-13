@@ -8,6 +8,7 @@ import React, {createContext} from "react"
 import {Editor} from "./pages/editor.pages.jsx"
 import BlogPage from "./pages/blog.page.jsx"
 import ProfilePage from "./pages/profile.page.jsx"
+import Dashboard from "./pages/dashboard.page.jsx"
 
 
 const App = () => {
@@ -69,6 +70,7 @@ const App = () => {
          <Route path="signin" element={!authUser ? <UserAuthForm type="signin" /> : <Navigate to="/" />} />
          
          <Route path="blog/:id" element={authUser ? <BlogPage /> : <Navigate to="/" />} />
+         <Route path="Dashboard" element={authUser ? <Dashboard /> : <Navigate to="/" />} />
          </Route>
       </Routes>
       </main>

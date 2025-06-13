@@ -231,3 +231,78 @@ export async function getUserBlogs(req, res) {
   }
 }
 
+
+export const likeBlog = async (req, res) => {
+    try {
+      const {id} = req.params
+      const {user} = req.params
+      
+      const blogFind = await Blogs.findOneAndUpdate({blog_id: id}, {$inc: {"activity.total_likes": 1}})
+      
+       console.log(blogFind)
+      
+      
+      res.status(200).json({
+        message: {
+         total_likes: blogFind?.activity.total_likes + 1,
+         total_reads: blogFind?.activity.total_reads + 1
+        }
+      })
+    } catch (e) {
+      console.log("form like",e.message)
+    }
+}
+export const markBlogAsRead = async (req, res) => {
+    try {
+      const {id} = req.params
+      const {user} = req.params
+      
+      const blogFind = await Blogs.findOneAndUpdate({blog_id: id}, {$inc: {"activity.total_reads": 1}})
+      
+      
+      res.status(200).json({
+        message: {
+        total_likes:  blogFind?.activity.total_likes + 1,
+        total_reads: blogFind?.activity.total_reads + 1
+        }
+      })
+    } catch (e) {
+      console.log("form like",e.message)
+    }
+}
+
+
+export const DeleteUserBlogs = async (req, res) => {
+  try {
+    const {id} = req.params
+      
+   const blogFind = await Blogs.findOneAndDelete({blog_id: id})
+   
+   
+   const url = blogFind.banner;
+      
+    const parts = url.split('/');
+    const fileNameWithExtension = parts[parts.length - 1]; // abc123.jpg
+    const fileName = fileNameWithExtension.split('.')[0]; 
+
+    const publicId = `${fileName}`;
+
+    const result = await cloudinary.uploader.destroy(publicId);
+      
+      
+    if (!Blogs) 
+    {
+      return res.status(400).json({
+        message: "error durring deleteing"
+      })
+    }
+      
+      
+    res.status(200).json({
+        message: "done"
+      })
+  } catch (e)
+  {
+    console.log(e.message, "in DeleteBlog")
+  }
+}

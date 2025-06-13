@@ -166,7 +166,8 @@ export default function BlogEditor() {
         }
       );
       
-      console.log("updated doc", data)
+      const data = await res.json()
+      
       toast.success("Blog Updated")
       setTimeout(() => {
         navigate(`/blog/${id}`)

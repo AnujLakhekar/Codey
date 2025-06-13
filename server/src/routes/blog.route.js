@@ -1,26 +1,38 @@
-import express from "express"
-import {upload, createBlog, getBlogs, deleteBlog, getTrandingBlogs, getBlogWithId, getUserBlogs, getBlogWithIdAndUpdate} from "../controllers/blog.js"
-import protectRoute from "../middleware/protectRoute.js"
+import express from "express";
+import {
+  upload,
+  createBlog,
+  getBlogs,
+  deleteBlog,
+  getTrandingBlogs,
+  getBlogWithId,
+  getUserBlogs,
+  getBlogWithIdAndUpdate,
+  likeBlog,       // 🔁 Add this
+  markBlogAsRead,
+  DeleteUserBlogs// 🔁 Add this
+} from "../controllers/blog.js";
+import protectRoute from "../middleware/protectRoute.js";
 
 const router = express.Router();
 
-router.post("/upload/banner", protectRoute , upload);
+// Upload banner
+router.post("/upload/banner", protectRoute, upload);
 
-router.post("/createNew", protectRoute , createBlog);
-router.post("/delete", protectRoute , deleteBlog);
-router.get("/get", protectRoute , getBlogs);
+// Create / Delete / Fetch blogs
+router.post("/createNew", protectRoute, createBlog);
+router.post("/delete", protectRoute, deleteBlog);
+router.get("/get", protectRoute, getBlogs);
+router.get("/getTrandingBlogs", protectRoute, getTrandingBlogs);
 
-router.get("/getTrandingBlogs", protectRoute , getTrandingBlogs);
+// Custom blog actions
+router.post("/like/:id/:user", protectRoute, likeBlog);           // 👍 Like a blog
+router.post("/read/:id/:user", protectRoute, markBlogAsRead);     // 📖 Mark as read
+router.get("/all/:id", protectRoute, getUserBlogs);         // 📄 All blogs by a user
+router.delete("/delete/:id", protectRoute, DeleteUserBlogs);       
 
-// ✅ Put this one first
-router.get("/all/:id", protectRoute , getUserBlogs);
+// Get or update a single blog
+router.get("/:id", protectRoute, getBlogWithId);
+router.post("/update/:id", protectRoute, getBlogWithIdAndUpdate);
 
-// 👇 This must come after
-router.get("/:id", protectRoute , getBlogWithId);
-
-router.post("/update/:id", protectRoute , getBlogWithIdAndUpdate);
-
-
-
-
-export default router
+export default router;
