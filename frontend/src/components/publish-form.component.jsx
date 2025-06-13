@@ -1,17 +1,18 @@
 import React, { useContext, useRef } from "react";
-import {useNavigate} from "react-router-dom"
+import {useNavigate, useParams} from "react-router-dom"
 import { IoMdCloseCircle } from "react-icons/io";
 import { AnimationWraper } from "../common/page-animation.jsx";
 import { EditorContext } from "../pages/editor.pages.jsx";
 import Tag from "../components/tags.component.jsx";
+import AlertBox from "../components/AlertBox.commponent.jsx"
 import { toast } from "react-hot-toast";
-
+import { MdGeneratingTokens } from "react-icons/md";
 import { useMutation } from "@tanstack/react-query";
 
 export default function PublishEditor() {
   const maxCharacters = 200;
   const tagLimit = 25;
-
+  const {id} = useParams()
   const charCountRef = useRef(null);
   const tagInputRef = useRef(null);
   const navigate = useNavigate()
@@ -19,6 +20,8 @@ export default function PublishEditor() {
     blog,
     setBlog,
     setEditorState,
+    isUpdating, 
+    setIsUpdating
   } = useContext(EditorContext);
   
   let  { banner, title, des, tags } = blog || {} ;
@@ -41,9 +44,10 @@ export default function PublishEditor() {
 
   const handleDescriptionKeyDown = (e) => {
     if (e.key === "Enter") {
+      e.preventDefault()
       const input = e.target;
       input.style.height = "auto";
-      input.style.height = input.scrollHeight + "px";
+      input.style.height = input.scrollHeight + 20 + "px";
     }
   };
 
@@ -133,6 +137,38 @@ export default function PublishEditor() {
     PublishBlog()
   }
 
+ const {mutate:UpdateBlog, isPending:isUpdatingBlog} = useMutation({
+    mutationFn: async () => {
+      try {
+        const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/blog/update/${id}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(blog),
+          credentials: "include",
+        }
+      );
+      
+      const data = await res.json()
+      
+      toast.success("Blog Updated")
+      setTimeout(() => {
+        navigate(`/blog/${id}`)
+      }, 2000)
+      return data
+      } catch (e) {
+        toast.error(e.message)
+      }
+    }
+  })
+
+
+ async function handleUpdateEvent() {
+   if (isUpdatingBlog) return toast.error("updating..")
+   UpdateBlog()
+ }
+
   return (
     <AnimationWraper className="w-full flex flex-col justify-center items-start">
       {/* Close Button */}
@@ -175,9 +211,16 @@ export default function PublishEditor() {
           </div>
 
           {/* Description Input */}
-          <div>
+          <div className="flex p4 items-center flex-col relative">
+          <div className="flex items-center w-full rounded-lg gap-2.5">
             <label className="text-gray-600 block mb-1">Blog Description</label>
-            <textarea
+            <div className="group p-1 flex justify-center items-center rounded-full m-2 "><MdGeneratingTokens  size={24} color="green" />
+           <div className="hidden group-hover:flex">
+           <AlertBox color="green-600" text="Creates discription with AI" />
+           </div>
+            </div>
+          </div>
+        <textarea
               className="w-full p-2 rounded-lg bg-gray-100 outline-none hover:bg-white border border-transparent focus:border-black transition resize-none"
               maxLength={maxCharacters}
               value={des}
@@ -188,10 +231,11 @@ export default function PublishEditor() {
             />
             <p
               ref={charCountRef}
-              className="text-sm text-right text-gray-500 mt-1"
+              className="absolute bottom-[-25px] p-4 right-0 text-sm text-right m-4 flex float-right text-gray-500 mt-1"
             >
               {maxCharacters - des.length} characters left
             </p>
+            
           </div>
 
           {/* Tag Input */}
@@ -216,7 +260,7 @@ export default function PublishEditor() {
       </div>
       
     <div className="flex w-full justify-center items-center gap-2.5">
-     <button onClick={handlePublishEvent} className="btn-dark p-2 m-2 " >Publish Now</button>
+     {isUpdating ? <button onClick={handleUpdateEvent} className="btn-dark p-2 m-2 " >{isUpdatingBlog ? "updating" : "update"}</button> : <button onClick={handlePublishEvent} className="btn-dark p-2 m-2 " >Publish Now</button>  }
      <button onClick={handlePublishDraftEvent} className="btn-light p-2 m-2 " >Save as draft</button>
     </div>
       

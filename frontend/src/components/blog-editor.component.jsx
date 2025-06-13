@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import EditorJS from "@editorjs/editorjs";
 import {useParams} from "react-router-dom"
-
+import {queryClient} from "../main.jsx"
 import logo from "../imgs/logo.png";
 import defaultBanner from "../imgs/blog_banner.png";
 import { tools } from "../components/tools.component.jsx";
@@ -24,14 +24,13 @@ export default function BlogEditor() {
     setTextEditor,
     setEditorState,
     setIsBannerUploaded, 
-    isBannerUploaded
+    isBannerUploaded,
+    isUpdating, 
+    setIsUpdating
   } = useContext(EditorContext);
   
-  useEffect(() => {
-    if (id) {
-      setEditingOldBlog(true)
-    }
-  }, [id])
+  
+  const user = queryClient.getQueryData(["authUser"]);
 
   // Setup EditorJS instance
   useEffect(() => {
@@ -161,6 +160,57 @@ async  function deleteUpload() {
     
     DeleteUploadedUrl()
   }
+  
+  
+  async function FetchBlogWithId() {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/blog/${id}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        }
+      );
+      
+      const data = await res.json()
+      const fetchedBlog = data.message;
+      
+      if (user?.user._id !== fetchedBlog?.author?._id) {
+    toast.error("Unathorized User")
+    setTimeout(() => {
+     // navigate("/")
+    }, 100)
+  }
+      
+      
+  const  blog_structure = {
+      title: fetchedBlog?.title,
+      banner: fetchedBlog?.banner,
+      content: fetchedBlog?.content[0],
+      tags: fetchedBlog?.tags,
+       des: fetchedBlog.des,
+      author: {
+      personal_info: fetchedBlog?.author.personal_info
+  },
+      draft: fetchedBlog.draft,
+}
+      setBlog(blog_structure)
+      setIsUpdating(true)
+      if (blog_structure.banner) {
+        setIsBannerUploaded(true)
+      }
+      
+    } catch (e) {
+      toast.error(e.message)
+    }
+  }
+  
+
+  React.useEffect(() => {
+    if (!id) return;
+    FetchBlogWithId()
+  }, [])
 
   return (<>
    {editingOldBlog ? "" : (    <div>
@@ -175,7 +225,7 @@ async  function deleteUpload() {
         </div>
         <div className="flex gap-2">
           <button className="btn-dark" onClick={handlePublish}>
-            Publish
+            {isUpdating ? "Update" : "Publish"}
           </button>
         </div>
       </nav>
@@ -192,7 +242,9 @@ async  function deleteUpload() {
                 <img
                   src={banner}
                   alt="Banner"
-                  onClick={() => bannerInputRef.current.click()}
+                  onClick={() =>{
+                if (banner) return;
+                    bannerInputRef.current.click()}}
                   className="h-[180px]  md:h-[280px] object-cover rounded-lg p-1 cursor-pointer"
                 />
                 <button
@@ -223,7 +275,8 @@ async  function deleteUpload() {
               <img
                 src={defaultBanner}
                 alt="Default Banner"
-                onClick={() => bannerInputRef.current.click()}
+                onClick={() => {
+                  bannerInputRef.current.click()}}
                 className="w-full h-auto rounded cursor-pointer"
               />
             </AnimationWraper>

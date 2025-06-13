@@ -3,15 +3,19 @@ import { CiHeart } from "react-icons/ci";
 import {Link} from "react-router-dom"
 
 export default function BlogPostCard({content, author}) {
-  const {title, tags, des, publishedAt, banner, activity: {total_reads, total_likes}, blog_id:id } = content;
+  const {title, tags, des, publishedAt, banner, activity: {total_reads, total_likes}, blog_id:id, draft } = content;
   const {username, fullname, email, profile_img} = author;
   return (
     <Link to={`/blog/${id}`} className="flex w-full items-center gap-8 border-b md:m-5 border-b-gray-100 pb-5 mb-4">
     <div className="w-full flex flex-col justify-center items-start p-2 overflow-hidden">
-      <div className="flex gap-2 items-center mb-7" >
+      <div className="flex gap-2 items-center justify-center mb-7" >
        <img className="w-6 h-6 border border-gray-100 border-[1px] rounded-full" src={profile_img} />
        <p className="line-clamp-1">{fullname} @{username}</p>
        <p className="min-w-fit">{formatPostDate(publishedAt)}</p>
+       {draft ? (
+       <div className="flex justify-center items-center bg-black rounded-lg p-1 text-lime-400">
+        Draft
+       </div>) : ""}
       </div>
       <h1 className="font-bold mx-4">{title}</h1>
       <p className="my-3 flex justify-center items-center m-2 overflow-x-auto text-xl font-sans leading-7 max-sm:hidden md:block line-clamp-2">{des}</p>

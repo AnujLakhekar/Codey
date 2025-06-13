@@ -58,7 +58,7 @@ const App = () => {
       <Routes>
       <Route path="/editor" element={authUser ? <Editor /> : <Navigate to="/signin" />} /> 
       
-      <Route path="/editor/:id" element={authUser ? <Editor state="editingOld" /> : <Navigate to="/signin" />} />
+      <Route path="/editor/:id" element={authUser ? <Editor /> : <Navigate to="/signin" />} />
       
       <Route path="/" element={<Navbar />}>
          <Route path="signup" element={!authUser ? <UserAuthForm type="signup" /> : <Navigate to="/" />} />
