@@ -28,7 +28,7 @@ export function Editor({ state }) {
   const {id} = useParams()
   const [blog, setBlog] = React.useState(blog_structure);
   const [isUpdating, setIsUpdating] = React.useState(false);
-  const [editorstate, setEditorState] = React.useState(state || "publish");
+  const [editorstate, setEditorState] = React.useState(state || "editor");
   const [textEditor, setTextEditor] = React.useState({ isReady: false });
 
   const user = queryClient.getQueryData(["authUser"]);
