@@ -45,6 +45,12 @@ app.use("/api/user/", userRoutes)
 app.use("/api/blog/", blogRoute)
 app.use("/api/gemini/", genratorRoute)
 
+app.post("/api/ping", (req, res) => {
+  res.status(200).json({
+    message: "pong",
+  })
+})
+
 // connecting database and starting the server
 
 app.listen(PORT,  (e) => {
