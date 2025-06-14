@@ -45,7 +45,7 @@ app.use("/api/user/", userRoutes)
 app.use("/api/blog/", blogRoute)
 app.use("/api/gemini/", genratorRoute)
 
-app.post("/api/ping", (req, res) => {
+app.get("/api/ping", (req, res) => {
   res.status(200).json({
     message: "pong",
   })
