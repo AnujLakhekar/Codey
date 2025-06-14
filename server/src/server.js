@@ -14,6 +14,7 @@ const { v2: cloudinaryV2 } = cloudinary;
 import authRoutes from "./routes/auth.route.js"
 import userRoutes from "./routes/user.route.js"
 import blogRoute from "./routes/blog.route.js"
+import genratorRoute from "./routes/genrator.route.js"
 
 // configuration
 config()
@@ -41,7 +42,8 @@ app.use(express.json({limit: '10mb'}));
 
 app.use("/api/auth/", authRoutes)
 app.use("/api/blog/", blogRoute)
-app.use("/api/user/", userRoutes)
+app.use("/api/blog/", blogRoute)
+app.use("/api/gemini/", genratorRoute)
 
 // connecting database and starting the server
 

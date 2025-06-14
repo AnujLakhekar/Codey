@@ -16,6 +16,10 @@ export default function PublishEditor() {
   const charCountRef = useRef(null);
   const tagInputRef = useRef(null);
   const navigate = useNavigate()
+  const [genrator, setGenrator] = React.useState(false)
+  const [isGenrating, setGenrating] = React.useState(false)
+  const [genratorContent, setGenratorContent] = React.useState(null)
+  const [prompt, setPrompt] = React.useState("")
   const {
     blog,
     setBlog,
@@ -168,6 +172,10 @@ export default function PublishEditor() {
    if (isUpdatingBlog) return toast.error("updating..")
    UpdateBlog()
  }
+ 
+ async function handleDiscriptionGenration() {
+   setGenrating(true)
+ }
 
   return (
     <AnimationWraper className="w-full flex flex-col justify-center items-start">
@@ -214,13 +222,32 @@ export default function PublishEditor() {
           <div className="flex p4 items-center flex-col relative">
           <div className="flex items-center w-full rounded-lg gap-2.5">
             <label className="text-gray-600 block mb-1">Blog Description</label>
-            <div className="group p-1 flex justify-center items-center rounded-full m-2 "><MdGeneratingTokens  size={24} color="green" />
+            <div className={`group p-1 flex justify-center items-center ${isGenrating ? "animate-pulse" : ""} rounded-full m-2 `}><MdGeneratingTokens onClick={() => setGenrator(true)}  size={24} color="green" />
            <div className="hidden group-hover:flex">
            <AlertBox color="green-600" text="Creates discription with AI" />
            </div>
             </div>
           </div>
-        <textarea
+
+{genrator ? (<>
+<textarea
+              className="w-full p-2 rounded-lg bg-gray-100 outline-none hover:bg-white border border-transparent focus:border-black transition resize-none"
+              value={prompt}
+              onChange={(e) => {
+              setPrompt(e.target.value)
+              }}
+              onKeyDown={handleDescriptionKeyDown}
+              placeholder="Write a prompt (max 200 characters)"
+              rows={3}
+            />
+      <div className="flex gap-3 m-2">
+    <button disable={isGenrating} className={`bg-black p-2 rounded-lg ${isGenrating && "animate-pulse"} text-white`} onClick={handleDiscriptionGenration}>Create</button>
+    <button onClick={() => {
+      setGenrator(false)
+      setGenrating(false)
+    }} className="bg-gray-100 border border-black/60 p-2 rounded-lg text-black">Close</button>
+      </div>
+</>) : (<><textarea
               className="w-full p-2 rounded-lg bg-gray-100 outline-none hover:bg-white border border-transparent focus:border-black transition resize-none"
               maxLength={maxCharacters}
               value={des}
@@ -229,12 +256,13 @@ export default function PublishEditor() {
               placeholder="Write a short description (max 200 characters)"
               rows={3}
             />
-            <p
+                        <p
               ref={charCountRef}
               className="absolute bottom-[-25px] p-4 right-0 text-sm text-right m-4 flex float-right text-gray-500 mt-1"
             >
               {maxCharacters - des.length} characters left
             </p>
+            </>)}
             
           </div>
 
