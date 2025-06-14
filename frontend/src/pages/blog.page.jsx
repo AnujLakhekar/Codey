@@ -41,7 +41,6 @@ export default function BlogPage() {
 
         return data;
       } catch (e) {
-        toast.error(e.message);
         throw e;
       }
     },
@@ -108,8 +107,8 @@ export default function BlogPage() {
 
   if (FetchingBlog) return <div className="text-center py-10 text-lg">Loading...</div>;
 
-  return (
-    <div className="max-w-3xl mx-auto p-4">
+  return (<>
+     {blog ? (    <div className="max-w-3xl mx-auto p-4">
       {/* Banner Image */}
       <div className="rounded-xl overflow-hidden shadow-lg mb-6">
         <img src={blog?.banner} alt="Banner" className="w-full h-64 object-cover" />
@@ -161,6 +160,7 @@ export default function BlogPage() {
         id="ReadorElement"
         className="prose prose-lg max-w-none bg-white rounded-lg shadow p-4 min-h-[200px]"
       />
-    </div>
+    </div>) : <div className=" m-2 bg-gray-100 rounded-lg text-gray-600 p-5"> blog not found</div>}
+    </>
   );
 }

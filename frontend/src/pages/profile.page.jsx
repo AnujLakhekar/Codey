@@ -37,6 +37,7 @@ export default function ProfilePage() {
       console.log(data)
       return data
       } catch (e) {
+        console.log(e)
         toast.error(e.message)
       }
     }

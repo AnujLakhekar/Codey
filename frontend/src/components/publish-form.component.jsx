@@ -129,21 +129,35 @@ export default function PublishEditor() {
   
   function handlePublishDraftEvent(e) {
      e.preventDefault();
-     
+ 
      setBlog((prev) => ({
        ...prev,
        draft: true,
      }))
+     
     
     if (isBlogPublishing) return toast.error("Current request is pending")
-
     
-    PublishBlog()
+    
+    if (id) {
+      
+      setBlog((prev) => ({
+       ...prev,
+       draft: false,
+     }))
+      
+       UpdateBlog()
+     } else {
+       PublishBlog()
+     }
   }
 
  const {mutate:UpdateBlog, isPending:isUpdatingBlog} = useMutation({
     mutationFn: async () => {
       try {
+     
+     console.log(blog)
+        
         const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/blog/update/${id}`,
         {
@@ -153,6 +167,8 @@ export default function PublishEditor() {
           credentials: "include",
         }
       );
+      
+      
       
       const data = await res.json()
       
@@ -170,6 +186,12 @@ export default function PublishEditor() {
 
  async function handleUpdateEvent() {
    if (isUpdatingBlog) return toast.error("updating..")
+   
+   setBlog((prev) => ({
+       ...prev,
+       draft: false,
+     }))
+   
    UpdateBlog()
  }
  
@@ -180,6 +202,9 @@ export default function PublishEditor() {
   return (
     <AnimationWraper className="w-full flex flex-col justify-center items-start">
       {/* Close Button */}
+      {blog.draft ? <div
+      className="bg-black text-green-400 rounded-lg p-2 m-2"
+      >draft</div> : ""}
       <div className="relative w-full">
         <button
           onClick={handleClose}
@@ -287,7 +312,10 @@ export default function PublishEditor() {
         </div>
       </div>
       
-    <div className="flex w-full justify-center items-center gap-2.5">
+   {blog.draft && <p className="text-gray-300 p-4">To Publish from draft click publish else use save as draft</p>}
+      
+    <div className="flex w-full justify-center items-center p-3 gap-2.5">
+
      {isUpdating ? <button onClick={handleUpdateEvent} className="btn-dark p-2 m-2 " >{isUpdatingBlog ? "updating" : "update"}</button> : <button onClick={handlePublishEvent} className="btn-dark p-2 m-2 " >Publish Now</button>  }
      <button onClick={handlePublishDraftEvent} className="btn-light p-2 m-2 " >Save as draft</button>
     </div>

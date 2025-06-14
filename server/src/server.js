@@ -41,7 +41,7 @@ app.use(express.json({limit: '10mb'}));
 // app routes 
 
 app.use("/api/auth/", authRoutes)
-app.use("/api/blog/", blogRoute)
+app.use("/api/user/", userRoutes)
 app.use("/api/blog/", blogRoute)
 app.use("/api/gemini/", genratorRoute)
 

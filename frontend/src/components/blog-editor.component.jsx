@@ -9,6 +9,7 @@ import {queryClient} from "../main.jsx"
 import logo from "../imgs/logo.png";
 import defaultBanner from "../imgs/blog_banner.png";
 import { tools } from "../components/tools.component.jsx";
+import {useNavigate} from "react-router-dom"
 import { AnimationWraper } from "../common/page-animation.jsx";
 import { EditorContext } from "../pages/editor.pages.jsx";
 
@@ -17,6 +18,7 @@ export default function BlogEditor() {
   const editorRef = useRef(null);
   const [editingOldBlog, setEditingOldBlog]  = useState(false)
   const {id} = useParams()
+  const navigate = useNavigate()
   const {
     blog,
     blog: { title, banner, content },
@@ -176,11 +178,9 @@ async  function deleteUpload() {
       const data = await res.json()
       const fetchedBlog = data.message;
       
-      if (user?.user._id !== fetchedBlog?.author?._id) {
-    toast.error("Unathorized User")
-    setTimeout(() => {
-     // navigate("/")
-    }, 100)
+  if (user?.user._id !== fetchedBlog?.author?._id) {
+    toast.error("Unathorized")
+     navigate("/")
   }
       
       
@@ -196,6 +196,9 @@ async  function deleteUpload() {
       draft: fetchedBlog.draft,
 }
       setBlog(blog_structure)
+      
+      editorRef.current.render(blog_structure.content)
+      
       setIsUpdating(true)
       if (blog_structure.banner) {
         setIsBannerUploaded(true)
@@ -213,7 +216,7 @@ async  function deleteUpload() {
   }, [])
 
   return (<>
-   {editingOldBlog ? "" : (    <div>
+   {editingOldBlog ? "" : (<div>
       <nav className="w-full h-[60px] border-b border-gray-100 flex items-center justify-between p-4">
         <div className="flex items-center gap-2">
           <Link to="/">
